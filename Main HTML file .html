@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Recommandation System</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: 'Roboto', Arial, sans-serif;
+            background: linear-gradient(120deg, #a8e063, #56ab2f);
+            color: #fff;
+            padding: 20px;
+            margin: 0;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
+        }
+
+        table {
+            margin: 0 auto;
+            border-collapse: collapse;
+            width: 80%;
+            background-color: rgba(255, 255, 255, 0.8);
+            color: #333;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 15px;
+            font-size: 1.2em;
+        }
+
+        th {
+            background-color: #56ab2f;
+            color: #fff;
+            text-transform: uppercase;
+        }
+
+        td {
+            text-align: center;
+        }
+
+        td#temperature, td#humidity, td#ph, td#nitrogen, td#moisture, td#health {
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        td:hover {
+            transform: scale(1.1);
+            background-color: #f2f2f2;
+            color: #333;
+        }
+
+        footer {
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #e8f5e9;
+        }
+    </style>
+    <script>
+        function fetchData() {
+            const channelId = 670492; // Your new channel ID
+            const urls = [
+                `https://api.thingspeak.com/channels/${channelId}/fields/1.json?results=1`, // Temperature
+                `https://api.thingspeak.com/channels/${channelId}/fields/2.json?results=1`, // Humidity
+                `https://api.thingspeak.com/channels/${channelId}/fields/3.json?results=1`, // pH
+                `https://api.thingspeak.com/channels/${channelId}/fields/4.json?results=1`, // Nitrogen
+                `https://api.thingspeak.com/channels/${channelId}/fields/5.json?results=1`, // Moisture
+                `https://api.thingspeak.com/channels/${channelId}/fields/6.json?results=1`  // Health Status
+            ];
+
+            fetch(urls[0])
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('temperature').innerText = data.feeds[0]?.field1 || 'N/A';
+                });
+
+            fetch(urls[1])
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('humidity').innerText = data.feeds[0]?.field2 || 'N/A';
+                });
+
+            fetch(urls[2])
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('ph').innerText = data.feeds[0]?.field3 || 'N/A';
+                });
+
+            fetch(urls[3])
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('nitrogen').innerText = data.feeds[0]?.field4 || 'N/A';
+                });
+
+            fetch(urls[4])
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('moisture').innerText = data.feeds[0]?.field5 || 'N/A';
+                });
+
+            fetch(urls[5])
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('health').innerText = data.feeds[0]?.field6 || 'N/A';
+                });
+        }
+
+        setInterval(fetchData, 5000); // Auto-refresh every 5 seconds
+    </script>
+</head>
+<body onload="fetchData()">
+    <h1>🌿 Plant Recommandation System 🌱</h1>
+    <table>
+        <tr>
+            <th>Temperature</th>
+            <th>Humidity</th>
+            <th>pH</th>
+            <th>Nitrogen</th>
+            <th>Moisture</th>
+            <th>Crop Name</th>
+        </tr>
+        <tr>
+            <td id="temperature">Loading...</td>
+            <td id="humidity">Loading...</td>
+            <td id="ph">Loading...</td>
+            <td id="nitrogen">Loading...</td>
+            <td id="moisture">Loading...</td>
+            <td id="health">Loading...</td>
+        </tr>
+    </table>
+    <footer>
+        
+    </footer>
+</body>
+</html>

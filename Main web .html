@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Recommendation System</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: 'Roboto', Arial, sans-serif;
+            background: linear-gradient(120deg, #a8e063, #56ab2f);
+            animation: gradient-animation 6s infinite alternate;
+            color: #fff;
+            padding: 20px;
+            margin: 0;
+        }
+
+        @keyframes gradient-animation {
+            0% { background: linear-gradient(120deg, #a8e063, #56ab2f); }
+            100% { background: linear-gradient(120deg, #56ab2f, #a8e063); }
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+            width: 90%;
+            background-color: rgba(255, 255, 255, 0.9);
+            color: #333;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 15px;
+            font-size: 1.1em;
+            border: none;
+            text-align: center;
+        }
+
+        th {
+            background-color: #56ab2f;
+            color: #fff;
+            text-transform: uppercase;
+        }
+
+        td {
+            position: relative;
+            background-color: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease-in-out;
+        }
+
+        td:hover {
+            transform: translateY(-5px);
+            background-color: #f1f8e9;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .progress-bar {
+            width: 60%;
+            height: 15px;
+            margin: 5px auto;
+            background: #e0e0e0;
+            border-radius: 7px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar div {
+            height: 100%;
+            background: linear-gradient(90deg, #4caf50, #8bc34a);
+            animation: fill-animation 1.5s ease-out forwards;
+        }
+
+        @keyframes fill-animation {
+            from { width: 0%; }
+            to { width: 100%; }
+        }
+
+        footer {
+            margin-top: 30px;
+            font-size: 0.9em;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        footer a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            margin: 0 10px;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+    <script>
+        function fetchData() {
+            const channelId = 670492; // Your new channel ID
+            const urls = [
+                `https://api.thingspeak.com/channels/${channelId}/fields/1.json?results=1`,
+                `https://api.thingspeak.com/channels/${channelId}/fields/2.json?results=1`,
+                `https://api.thingspeak.com/channels/${channelId}/fields/3.json?results=1`,
+                `https://api.thingspeak.com/channels/${channelId}/fields/4.json?results=1`,
+                `https://api.thingspeak.com/channels/${channelId}/fields/5.json?results=1`,
+                `https://api.thingspeak.com/channels/${channelId}/fields/6.json?results=1`
+            ];
+
+            fetch(urls[0])
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('temperature').innerHTML = `${data.feeds[0]?.field1 || 'N/A'}°C`;
+                });
+
+            fetch(urls[1])
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('humidity').innerHTML = `${data.feeds[0]?.field2 || 'N/A'}%`;
+                });
+
+            fetch(urls[2])
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('ph').innerText = data.feeds[0]?.field3 || 'N/A';
+                });
+
+            fetch(urls[3])
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('nitrogen').innerText = data.feeds[0]?.field4 || 'N/A';
+                });
+
+            fetch(urls[4])
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('moisture').innerText = data.feeds[0]?.field5 || 'N/A';
+                });
+
+            fetch(urls[5])
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('health').innerText = data.feeds[0]?.field6 || 'N/A';
+                });
+        }
+
+        setInterval(fetchData, 5000); // Auto-refresh every 5 seconds
+    </script>
+</head>
+<body onload="fetchData()">
+    <h1>🌿 Plant Recommendation System 🌱</h1>
+    <table>
+        <tr>
+            <th>Temperature 🌡️</th>
+            <th>Humidity 💧</th>
+            <th>pH ⚗️</th>
+            <th>Nitrogen 🌾</th>
+            <th>Moisture 🌊</th>
+            <th>Crop Name 🌱</th>
+        </tr>
+        <tr>
+            <td id="temperature">Loading...</td>
+            <td id="humidity">Loading...</td>
+            <td id="ph">Loading...</td>
+            <td id="nitrogen">Loading...</td>
+            <td id="moisture">Loading...</td>
+            <td id="health">Loading...</td>
+        </tr>
+    </table>
+    <footer>
+        Made with ❤️ | <a href="#">Contact</a> | <a href="#">Privacy Policy</a>
+    </footer>
+</body>
+</html>
